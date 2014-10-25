@@ -13,7 +13,8 @@ Package.onUse(function(api) {
     'templating'
   ]);
   api.addFiles([
-    'dist/x-tag-components.min.js',
+    'dist/bindPolyfill.js',
+    'dist/x-tag-components.js',
     'lib/registerComponent.coffee'
   ], 'client');
 });

@@ -1,8 +1,10 @@
 # numtel:webcomponent
 
+[![Build Status](https://travis-ci.org/numtel/meteor-webcomponent.svg?branch=master)](https://travis-ci.org/numtel/meteor-webcomponent)
+
 Turn any Meteor template into a WebComponent with help from Mozilla's [X-Tag library](http://www.x-tags.org/).
 
-Last decade's iframes can finally be banished in favor of new WebComponents. Full stylesheet and DOM isolation without extra layers is native in some browsers already. The X-Tag library brings WebComponent support to all modern browsers (IE 9+).
+Last decade's iframes can finally be banished in favor of new WebComponents. Full stylesheet and DOM isolation without extra layers is native in some browsers already. The X-Tag library brings WebComponent support to all modern browsers (IE 9+). [Learn more about WebComponents...](http://webcomponents.org/)
 
 The included X-Tags distribution also adds the [HTML imports polyfill](https://github.com/pennyfx/htmlimports-polyfill).
 
