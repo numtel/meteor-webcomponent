@@ -2,10 +2,14 @@
 # @param {string} name - Node name for new element (must include hyphen)
 # @param {object} options
 # @option {[string]} attributes - list to forward to template data
+# @option {string} css - Rules to apply in Shadow DOM context
+# @option {[string]} cssLinks - list of hrefs
 Blaze.Template.prototype.registerComponent = (name, options) ->
   blazeTemplate = @
   options = _.defaults options || {},
     attributes: []
+    css: undefined
+    cssLinks: []
 
   # Generate accessors for each attribute
   accessors = {}
@@ -20,27 +24,14 @@ Blaze.Template.prototype.registerComponent = (name, options) ->
       created: ->
         self = @
         self.shadowRoot = self.createShadowRoot()
-        self.blazeView = Blaze.render blazeTemplate, self.shadowRoot
+        styles = ''
+        styles += '<style>' + options.css + '</style>' if options.css
+        for link in options.cssLinks
+          styles += '<link rel="stylesheet" href="' + link + '" />' 
 
-        # Translate Blaze events
-        _.each blazeTemplate.__eventMaps, (eventMap) ->
-          _.each eventMap, (handler, blazeKey) ->
-            boundHandler = (event) ->
-              self = @
-              handler.call self.blazeView, event
-            blazeKey.split(',').forEach (eventKey) ->
-              eventSpacePos = eventKey.indexOf(' ')
-              if eventSpacePos == -1
-                # Event is on the root element
-                eventType = eventKey
-                self.addEventListener eventType, boundHandler, false
-              else
-                # Event is bound to a child
-                eventType = eventKey.substr 0, eventSpacePos
-                eventTarget = eventKey.substr(eventSpacePos).trim()
-                _.each self.shadowRoot.querySelectorAll(eventTarget), (target) ->
-                  target.blazeView = self.blazeView
-                  target.addEventListener eventType, boundHandler, false
+        self.shadowRoot.innerHTML = styles + '<div></div>'
+        self.blazeRoot = self.shadowRoot.querySelector('div')
+        self.blazeView = Blaze.render blazeTemplate, self.blazeRoot
       attributeChanged: ->
         # hmmm
     accessors: accessors

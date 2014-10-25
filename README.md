@@ -8,9 +8,12 @@ Turn any Meteor template into a WebComponent.
 
 Under construction...
 
+* Use CSS attribute or ::shadow psuedo-class for styling
+
 ## Todo
 
-* Support removing event handlers
+* Element attributes -> template data
+* bleedParentStyles boolean option
 
 ## License
 
