@@ -9,4 +9,5 @@ Template.testElementInner.events
 Template.testElement.registerComponent 'test-element',
   attributes: ['attr'],
   css: 'h1 { color: red; } p { color: blue; }'
+  cssLinks: ['notfound.css']
 
