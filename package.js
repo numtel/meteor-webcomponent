@@ -1,8 +1,8 @@
 Package.describe({
   name: 'numtel:webcomponent',
-  summary: ' /* Fill me in! */ ',
-  version: '1.0.0',
-  git: ' /* Fill me in! */ '
+  summary: 'Create WebComponents from Templates',
+  version: '0.0.1',
+  git: 'https://github.com/numtel/meteor-webcomponent.git'
 });
 
 Package.onUse(function(api) {
@@ -13,7 +13,7 @@ Package.onUse(function(api) {
     'templating'
   ]);
   api.addFiles([
-    'dep/x-tag-components.js',
+    'dist/x-tag-components.min.js',
     'lib/registerComponent.coffee'
   ], 'client');
 });
@@ -22,9 +22,14 @@ Package.onTest(function(api) {
   api.use([
     'tinytest',
     'coffeescript',
+    'session',
+    'templating',
     'numtel:webcomponent'
   ]);
   api.addFiles([
-    'test/registerComponent.coffee'
+    'test/mockup/component.html',
+    'test/mockup/component.css',
+    'test/mockup/component.coffee',
+    'test/componentRendered.coffee'
   ], 'client');
 });

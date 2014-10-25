@@ -1,3 +1,7 @@
+# numtel:webcomponent
+# MIT License, ben@latenightsketches.com
+# lib/registerComponent.coffee
+
 # Register a Blaze Template as a WebComponent using X-Tags
 # @param {string} name - Node name for new element (must include hyphen)
 # @param {object} options
@@ -11,6 +15,15 @@ Blaze.Template.prototype.registerComponent = (name, options) ->
     css: undefined
     cssLinks: []
 
+  # Build styles from options
+  styles = ''
+  styles += '<style>' + options.css + '</style>' if options.css
+  for link in options.cssLinks
+    styles += '<link rel="stylesheet" href="' + link + '" />'
+  # Blaze Template must be wrapped as jQuery fails to find children
+  # directly from the shadowRoot.
+  shadowContent = styles + '<div></div>'
+
   # Generate accessors for each attribute
   accessors = {}
   _.each options.attributes, (attr) ->
@@ -19,23 +32,19 @@ Blaze.Template.prototype.registerComponent = (name, options) ->
       get: -> @getAttribute attr
       set: (value) -> @xtag.data[attr] = value
 
-  component = xtag.register name,
+  # Build element
+  element = xtag.register name,
     lifecycle:
       created: ->
         self = @
         self.shadowRoot = self.createShadowRoot()
-        styles = ''
-        styles += '<style>' + options.css + '</style>' if options.css
-        for link in options.cssLinks
-          styles += '<link rel="stylesheet" href="' + link + '" />' 
-
-        self.shadowRoot.innerHTML = styles + '<div></div>'
+        self.shadowRoot.innerHTML = shadowContent
         self.blazeRoot = self.shadowRoot.querySelector('div')
-        self.blazeView = Blaze.render blazeTemplate, self.blazeRoot
-      attributeChanged: ->
-        # hmmm
+      inserted: ->
+        self = @
+        self.blazeView = Blaze.renderWithData blazeTemplate, self, self.blazeRoot
     accessors: accessors
 
   # Create global reference
   nameCamelCase = name.replace /-([a-z])/g, (g) -> g[1].toUpperCase()
-  window[nameCamelCase] = component
+  window[nameCamelCase] = element

@@ -1,0 +1,20 @@
+<body>
+  <test-element attr="someval">
+    <p>my content</p>
+  </test-element>
+</body>
+
+<template name="testElement">
+  <div class="wrapper">
+    <h1>{{attr}}</h1>
+    {{> testElementInner}}
+  </div>
+</template>
+
+<template name="testElementInner">
+  <div class="inner">
+    <button>Click Me!</button>
+    <span>{{counter}}</span>
+    <content></content>
+  </div>
+</template>
