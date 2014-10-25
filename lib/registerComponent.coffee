@@ -36,13 +36,11 @@ Blaze.Template.prototype.registerComponent = (name, options) ->
   element = xtag.register name,
     lifecycle:
       created: ->
-        self = @
-        self.shadowRoot = self.createShadowRoot()
-        self.shadowRoot.innerHTML = shadowContent
-        self.blazeRoot = self.shadowRoot.querySelector('div')
+        @shadowRoot = @createShadowRoot()
+        @shadowRoot.innerHTML = shadowContent
+        @blazeRoot = @shadowRoot.querySelector('div')
       inserted: ->
-        self = @
-        self.blazeView = Blaze.renderWithData blazeTemplate, self, self.blazeRoot
+        @blazeView = Blaze.renderWithData blazeTemplate, @, @blazeRoot
     accessors: accessors
 
   # Create global reference
