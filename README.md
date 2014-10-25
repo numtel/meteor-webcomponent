@@ -8,6 +8,9 @@ Turn any Meteor template into a WebComponent.
 
 Under construction...
 
+## Todo
+
+* Support removing event handlers
 
 ## License
 

@@ -13,7 +13,7 @@ Package.onUse(function(api) {
     'templating'
   ]);
   api.addFiles([
-    'dep/x-tag-components.min.js',
+    'dep/x-tag-components.js',
     'lib/registerComponent.coffee'
   ], 'client');
 });
