@@ -87,9 +87,17 @@ Instance:
 </advanced-example>
 ```
 
+The data context for the template rendered inside a WebComponent is the element instance. Although only `{{myVal}}` is displayed in the example, the entire element instance object is applied as the template's data. Forwarded element attributes are available to be inserted in this way because they are properties on the element instance object.
+
 ## Notes
 
-* Styles may also be applied from document sheets using the `::shadow` psuedo-class.
+* Styles may also be applied from document sheets using the `::shadow` pseudo-class.
+* When using CSS embedded in a component, the `:host` pseudo-class matches the root element. By default, WebComponents are `display: inline`. Pass the following in the `css` option to change that:
+
+    ```css
+    :host { display: block; }
+    ```
+
 
 ## License
 
