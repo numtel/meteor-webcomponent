@@ -8,6 +8,13 @@ Last decade's iframes can finally be banished in favor of new WebComponents. Ful
 
 The included X-Tags distribution also adds the [HTML imports polyfill](https://github.com/pennyfx/htmlimports-polyfill).
 
+### Why use WebComponents when Meteor already has Spacebars?
+
+Spacebars already provides some of the features of WebComponents: attributes, child DOM.
+Beyond these features, a WebComponent provides CSS and DOM isolation in what is called a Shadow DOM.
+CSS isolation means that a rules on your page will not effect an element in your WebComponent's Shadow DOM (or vice-versa).
+DOM isolation means that `querySelector()` or jQuery will not be able to directly find the elements either.
+
 ## Installation
 
 ```bash
