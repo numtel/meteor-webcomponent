@@ -15,6 +15,9 @@ Beyond these features, a WebComponent provides CSS and DOM isolation in what is 
 CSS isolation means that a rules on your page will not effect an element in your WebComponent's Shadow DOM (or vice-versa).
 DOM isolation means that `querySelector()` or jQuery will not be able to directly find the elements either.
 
+Sadly, X-Tags does not polyfill the Shadow DOM features.
+In browsers that do not provide Shadow DOM suport natively, the child DOM will be appended normally. See the 'Advanced Usage' section below for ways to work around these issues.
+
 ## Installation
 
 ```bash
@@ -67,44 +70,71 @@ Key      | Type     | Description
 
 Template:
 
+HTML:
 ```html
 <template name="example">
   <!-- Insert value from attribute -->
   <h1>{{myVal}}</h1>
+  <button>Click Me</button>
 
-  <p>This will be blue.</p>
+  <p class="answer">This will be blue.</p>
 
   <!-- Forward child DOM -->
   <content></content>
 </template>
 ```
 
+Javascript:
 ```javascript
 Template.example.registerComponent('advanced-example', {
   attributes: ['myVal'],
   css: 'h1 { color: red; } p { color: blue; }'
 });
+
+Template.example.events({
+  'click button': function(event) {
+    // Find other elements inside child DOM (shadow or not)
+    this.childRoot.querySelector('p.answer').innerHTML = 'Clicked';
+  }
+});
+```
+
+LESS:
+```less
+// Styles for non-native browsers
+.componentMixin(~'>div');
+// Styles for browsers with ShadowRoot native
+.componentMixin(~'::shadow');
+
+.componentMixin(@suffix) {
+  advanced-example@{suffix} {
+    .some-rule {
+      color: blue;
+    }
+  }
+}
 ```
 
 Instance:
 
 ```html
 <advanced-example myVal="Something in the way">
-  <p>This will not be blue because it has been forwarded.</p>
+  <p>This will not be blue because it has been forwarded. (In Chrome anyways)</p>
 </advanced-example>
 ```
 
 The data context for the template rendered inside a WebComponent is the element instance. Although only `{{myVal}}` is displayed in the example, the entire element instance object is applied as the template's data. Forwarded element attributes are available to be inserted in this way because they are properties on the element instance object.
 
-## Notes
+## Compatibility Notes
 
-* Styles may also be applied from document sheets using the `::shadow` pseudo-class.
+For browsers that support Shadow DOM:
+
+* Styles may be applied from document sheets using the `::shadow` pseudo-class.
 * When using CSS embedded in a component, the `:host` pseudo-class matches the root element. By default, WebComponents are `display: inline`. Pass the following in the `css` option to change that:
 
     ```css
     :host { display: block; }
     ```
-
 
 ## License
 

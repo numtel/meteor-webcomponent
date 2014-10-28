@@ -34,13 +34,17 @@ Blaze.Template.prototype.registerComponent = (name, options) ->
 
   # Build element
   element = xtag.register name,
+    shadow: shadowContent
     lifecycle:
       created: ->
-        @shadowRoot = @createShadowRoot()
-        @shadowRoot.innerHTML = shadowContent
-        @blazeRoot = @shadowRoot.querySelector('div')
-      inserted: ->
-        @blazeView = Blaze.renderWithData blazeTemplate, @, @blazeRoot
+        if @shadowRoot
+          # In browser that supports shadowRoot (Chrome)
+          @childRoot = @shadowRoot.querySelector 'div'
+        else
+          # Compatibility for non-Chrome
+          @innerHTML = shadowContent
+          @childRoot = @querySelector 'div'
+        @blazeView = Blaze.renderWithData blazeTemplate, @, @childRoot
     accessors: accessors
 
   # Create global reference
