@@ -1,12 +1,12 @@
 <body>
-  <test-element attr="someval">
+  <test-element myval="someval">
     <p>my content</p>
   </test-element>
 </body>
 
 <template name="testElement">
   <div class="wrapper">
-    <h1>{{attr}}</h1>
+    <h1>{{myval}}</h1>
     {{> testElementInner}}
   </div>
 </template>

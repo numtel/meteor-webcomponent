@@ -1,7 +1,7 @@
 Package.describe({
   name: 'numtel:webcomponent',
   summary: 'Create WebComponents from Templates',
-  version: '0.0.2',
+  version: '0.0.3',
   git: 'https://github.com/numtel/meteor-webcomponent.git'
 });
 
@@ -14,8 +14,8 @@ Package.onUse(function(api) {
   ]);
   api.addFiles([
     'dist/bindPolyfill.js',
-    'dist/x-tag-components.js',
-    'lib/registerComponent.coffee'
+    'dist/webcomponents.js',
+    'lib/registerElement.coffee'
   ], 'client');
 });
 

@@ -4,12 +4,10 @@
 
 Tinytest.add 'window reference created', (test) ->
   test.equal typeof window.testElement, 'function'
-  test.equal window.testElement.name, 'test-element'
 
 Tinytest.add 'return value correct', (test) ->
-  retval = Template.testElement.registerComponent 'return-test'
+  retval = Template.testElement.registerElement 'return-test'
   test.equal typeof retval, 'function'
-  test.equal retval.name, 'return-test'
 
 Tinytest.add 'h1 is red and contains "someval"', (test) ->
   rendered = document.querySelector 'test-element'
@@ -18,10 +16,11 @@ Tinytest.add 'h1 is red and contains "someval"', (test) ->
   # Check attribute forwarding
   test.equal h1.innerHTML, 'someval'
   # Check css option
-  test.equal getStyleProperty(h1, 'color'), 'rgb(255, 0, 0)'
+  test.include ['rgb(255, 0, 0)', 'red'], getStyleProperty(h1, 'color')
   # Check cssLinks option
   test.equal link.href, \
-    document.location.origin + document.location.pathname + 'notfound.css'
+    document.location.protocol + '//' + document.location.host + \
+      document.location.pathname + 'notfound.css'
   test.equal link.rel, 'stylesheet'
 
 Tinytest.addAsync 'counter span text is 1 greater after click', (test, done) ->

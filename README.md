@@ -1,22 +1,17 @@
 # numtel:webcomponent
 
-[![Build Status](https://travis-ci.org/numtel/meteor-webcomponent.svg?branch=master)](https://travis-ci.org/numtel/meteor-webcomponent)
+Turn any Meteor template into a new element on all modern browsers with help from Polymer's [webcomponents.js polyfill library](https://github.com/Polymer/webcomponentsjs)
 
-Turn any Meteor template into a WebComponent with help from Mozilla's [X-Tag library](http://www.x-tags.org/).
-
-Last decade's iframes can finally be banished in favor of new WebComponents. Full stylesheet and DOM isolation without extra layers is native in some browsers already. The X-Tag library brings WebComponent support to all modern browsers (IE 9+). [Learn more about WebComponents...](http://webcomponents.org/)
-
-The included X-Tags distribution also adds the [HTML imports polyfill](https://github.com/pennyfx/htmlimports-polyfill).
+Last decade's iframes can finally be banished in favor of new WebComponents. Full stylesheet and DOM isolation without extra layers is native in some browsers already (Chrome, Firefox 34). The Polymer library brings WebComponent support to all modern browsers (IE 9+). [Learn more about WebComponents...](http://webcomponents.org/)
 
 ### Why use WebComponents when Meteor already has Spacebars?
 
 Spacebars already provides some of the features of WebComponents: attributes, child DOM.
 Beyond these features, a WebComponent provides CSS and DOM isolation in what is called a Shadow DOM.
+DOM isolation means that `querySelector()` or jQuery will not be able to directly find the elements.
 CSS isolation means that a rules on your page will not effect an element in your WebComponent's Shadow DOM (or vice-versa).
-DOM isolation means that `querySelector()` or jQuery will not be able to directly find the elements either.
 
-Sadly, X-Tags does not polyfill the Shadow DOM features.
-In browsers that do not provide Shadow DOM suport natively, the child DOM will be appended normally. See the 'Advanced Usage' section below for ways to work around these issues.
+Polymer's webcomponents.js library includes polyfills for all features except shadow DOM CSS isolation. To make up for this shortcoming, I have been working on a [shadow DOM CSS isolation polyfill](https://github.com/numtel/shadowstyles).
 
 ## Installation
 
@@ -35,13 +30,13 @@ Imagine the familiar template:
 </template>
 ```
 
-This widget can be converted in to a WebComponent using its `registerComponent` method:
+This widget can be converted in to a WebComponent using its `registerElement` method:
 
 ```javascript
 
 // ...Default event handlers...
 
-Template.hello.registerComponent('hello-counter');
+Template.hello.registerElement('hello-counter');
 ```
 
 Then insert the new element anywhere in your application:
@@ -52,7 +47,7 @@ Then insert the new element anywhere in your application:
 
 ## Implements
 
-#### Template.prototype.registerComponent(name, options)
+#### Template.prototype.registerElement(name, options)
 
 `name` *String* - The name of the new element type to be created. Must include a hyphen. A reference to the element constructor will be added to `window` on the camel-cased version of this name.
 
@@ -60,7 +55,6 @@ Then insert the new element anywhere in your application:
 
 Key      | Type     | Description
 ---------|----------|--------------------------
-`attributes`|`[string]` | Array of element attributes to forward to template data
 `css`       |`string`   | Rules to add in a `<style>` tag
 `cssLinks`  |`[string]` | Array of HREFs to create `<link>` tags
 
@@ -74,7 +68,7 @@ HTML:
 ```html
 <template name="example">
   <!-- Insert value from attribute -->
-  <h1>{{myVal}}</h1>
+  <h1>{{myval}}</h1>
   <button>Click Me</button>
 
   <p class="answer">This will be blue.</p>
@@ -86,16 +80,8 @@ HTML:
 
 Javascript:
 ```javascript
-Template.example.registerComponent('advanced-example', {
-  attributes: ['myVal'],
+Template.example.registerElement('advanced-example', {
   css: 'h1 { color: red; } p { color: blue; }'
-});
-
-Template.example.events({
-  'click button': function(event) {
-    // Find other elements inside child DOM (shadow or not)
-    this.childRoot.querySelector('p.answer').innerHTML = 'Clicked';
-  }
 });
 ```
 
@@ -118,12 +104,13 @@ LESS:
 Instance:
 
 ```html
-<advanced-example myVal="Something in the way">
+<advanced-example myval="Something in the way">
   <p>This will not be blue because it has been forwarded. (In Chrome anyways)</p>
 </advanced-example>
 ```
 
-The data context for the template rendered inside a WebComponent is the element instance. Although only `{{myVal}}` is displayed in the example, the entire element instance object is applied as the template's data. Forwarded element attributes are available to be inserted in this way because they are properties on the element instance object.
+Element attributes will be added to an object accessible as the template's context.
+Attributes names must be lowercase. The template will be rerendered when an attribute changes.
 
 ## Compatibility Notes
 
@@ -135,6 +122,17 @@ For browsers that support Shadow DOM:
     ```css
     :host { display: block; }
     ```
+
+## Running tests
+
+Tests may be ran like any other Meteor package:
+
+```bash
+# From repository directory (named numtel:webcomponent)
+$ meteor test-packages ./
+```
+
+Travis CI badge has been removed as PhantomJS <2.0 (1.9.7 is latest stable installed on Travis) does not support MutationObservers or the polyfill to bring support to other browsers. If concerned, please run the tests locally. (They work for me in IE9/10, FF33, and Chrome. Soon, I may set up SauceLabs so that the tests can run in a normal browser with Travis.)
 
 ## License
 
