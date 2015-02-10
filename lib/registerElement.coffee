@@ -15,9 +15,13 @@ Blaze.Template.prototype.registerElement = (name, options) ->
 
   # Build styles from options
   styles = ''
-  styles += '<style>' + options.css + '</style>' if options.css
-  for link in options.cssLinks
-    styles += '<link rel="stylesheet" href="' + link + '" />'
+  if options.css or options.cssLinks
+    styles += '<style>'
+    for link in options.cssLinks
+      styles += '@import url("' + link + '");'
+    if options.css
+      styles += options.css
+    styles += '</style>'
   # Blaze Template must be wrapped as jQuery fails to find children
   # directly from the shadowRoot.
   shadowContent = styles + '<div></div>'
