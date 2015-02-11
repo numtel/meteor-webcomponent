@@ -12,16 +12,14 @@ Tinytest.add 'return value correct', (test) ->
 Tinytest.add 'h1 is red and contains "someval"', (test) ->
   rendered = document.querySelector 'test-element'
   h1 = rendered.shadowRoot.querySelector 'h1'
-  link = rendered.shadowRoot.querySelector 'link'
+  style = rendered.shadowRoot.querySelector 'style'
   # Check attribute forwarding
   test.equal h1.innerHTML, 'someval'
   # Check css option
   test.include ['rgb(255, 0, 0)', 'red'], getStyleProperty(h1, 'color')
   # Check cssLinks option
-  test.equal link.href, \
-    document.location.protocol + '//' + document.location.host + \
-      document.location.pathname + 'notfound.css'
-  test.equal link.rel, 'stylesheet'
+  test.matches style.innerText, \
+    /^(@import url\("notfound.css"\);)/
 
 Tinytest.addAsync 'counter span text is 1 greater after click', (test, done) ->
   # Check that events and reactivity work
