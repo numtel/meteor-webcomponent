@@ -34,9 +34,9 @@ Blaze.Template.prototype.registerElement = (name, options) ->
     @blazeData = {}
     @blazeView = Blaze.renderWithData blazeTemplate, @blazeData, @childRoot
   newPrototype.attributeChangedCallback = (name, oldValue, newValue) ->
+    @blazeData = @blazeView.dataVar.get()
     @blazeData[name] = newValue
-    Blaze.remove @blazeView
-    @blazeView = Blaze.renderWithData blazeTemplate, @blazeData, @childRoot
+    @blazeView.dataVar.set @blazeData
 
   element = document.registerElement name,
     prototype: newPrototype
