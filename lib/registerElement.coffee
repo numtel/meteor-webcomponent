@@ -33,6 +33,9 @@ Blaze.Template.prototype.registerElement = (name, options) ->
     @childRoot = shadow.querySelector 'div'
     @blazeData = {}
     @blazeView = Blaze.renderWithData blazeTemplate, @blazeData, @childRoot
+    @blazeView.autorun =>
+      _.each @blazeView.dataVar.get(), (name, attr) =>
+        @childRoot.parentNode.host.setAttribute attr, name
   newPrototype.attributeChangedCallback = (name, oldValue, newValue) ->
     @blazeData = @blazeView.dataVar.get()
     @blazeData[name] = newValue
