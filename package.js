@@ -1,7 +1,7 @@
 Package.describe({
   name: 'numtel:webcomponent',
   summary: 'Create WebComponents from Templates',
-  version: '0.0.5',
+  version: '0.0.6',
   git: 'https://github.com/numtel/meteor-webcomponent.git'
 });
 
